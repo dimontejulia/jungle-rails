@@ -1,5 +1,5 @@
 class Admin::SalesController < ApplicationController
   def index
-    @products = nil
+    @sales = Sale.all
   end
 end
