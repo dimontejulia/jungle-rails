@@ -10,7 +10,7 @@ RSpec.describe User, type: :model do
     password_confirmation: 'wizard'
   )
 
-  describe 'User Validations' do
+  describe 'New User Validations:' do
     it "should save a new user with valid attributes" do 
       expect(user).to (be_valid)
     end
@@ -25,6 +25,25 @@ RSpec.describe User, type: :model do
     it "is not valid without an email" do 
       user.email = nil;
       expect(user).to_not (be_valid)
+    end
+    it "should not accept emails already in db even if case is different" do
+      user = User.new(
+        first_name: "Albus",
+        last_name: "Dumbledore",
+        email: "albus@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      user2 = User.new(
+        first_name: "Albus",
+        last_name: "Dumbledore",
+        email: "AlbuS@WiZARd.COM",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      expect(user2).to_not (be_valid)
+
     end
   end
 end
