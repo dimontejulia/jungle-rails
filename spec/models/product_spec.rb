@@ -10,7 +10,7 @@ RSpec.describe Product, type: :model do
     category_id: @category.id
     )
 
-  describe 'Validations' do
+  describe 'New Product Validations' do
     it "should save a product with valid attributes" do 
       expect(product).to (be_valid)
     end
