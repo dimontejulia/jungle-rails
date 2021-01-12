@@ -8,8 +8,8 @@ RSpec.describe Product, type: :model do
     price: 66.00,
     quantity: 21,
     category_id: @category.id
-    )
-
+  )
+  product.save
   describe 'New Product Validations' do
     it "should save a product with valid attributes" do 
       expect(product).to (be_valid)

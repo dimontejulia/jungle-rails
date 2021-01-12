@@ -3,13 +3,13 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
 
   user = User.new(
-    first_name: "Albus",
-    last_name: "Dumbledore",
-    email: "albus@wizard.com",
+    first_name: "Remus",
+    last_name: "Lupin",
+    email: "remus@wizard.com",
     password: 'wizard',
     password_confirmation: 'wizard'
   )
-
+  user.save
   describe 'New User Validations:' do
     it "should save a new user with valid attributes" do 
       expect(user).to (be_valid)
@@ -27,24 +27,26 @@ RSpec.describe User, type: :model do
       expect(user).to_not (be_valid)
     end
     it "is not valid with emails already in db even if case is different" do
-      user = User.new(
-        first_name: "Albus",
-        last_name: "Dumbledore",
-        email: "albus@wizard.com",
-        password: 'wizard',
-        password_confirmation: 'wizard'
-      )
+      user = User.new
+      user.first_name = 'Dolores'
+      user.last_name = 'Umbridge'
+      user.email = 'dolores@wizard.com'
+      user.password = 'wizard'
+      user.password_confirmation = 'wizard'
+
       user.save
-      user2 = User.new(
-        first_name: "Albus",
-        last_name: "Dumbledore",
-        email: "AlbuS@WiZARd.COM",
-        password: 'wizard',
-        password_confirmation: 'wizard'
-      )
-      expect(user2).to_not (be_valid)
+      
+      user2 = User.new
+      user2.first_name = 'Dolores'
+      user2.last_name = 'Umbridge'
+      user2.email = 'dolores@WIZARD.com'
+      user2.password = 'wizard'
+      user2.password_confirmation = 'wizard'
+      user2.save
+    
+      expect(user2.errors[:email].first).to eq('has already been taken')
     end
-    it "is not valid with passwords less than 8 characters" do 
+    it "is not valid with passwords less than 6 characters" do 
       user.password = '123';
       user.password_confirmation = '123';
       expect(user).to_not (be_valid)
@@ -52,25 +54,56 @@ RSpec.describe User, type: :model do
   end
 
   describe ".authenticate_with_credentials" do
-    user = User.new(
-      first_name: "Severus",
-      last_name: "Snape",
-      email: "snape@wizard.com",
-      password: 'wizard',
-      password_confirmation: 'wizard'
-    )
-    user.save
+
     it "returns an instance of the user with valid credentials" do
-      user = User.authenticate_with_credentials('snape@wizard.com', 'wizard')
-      expect(user).not_to be (nil)
+      
+      user = User.new(
+        first_name: "Minerva",
+        last_name: "McGonagall",
+        email: "minerva@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      loginUser = User.authenticate_with_credentials('minerva@wizard.com', 'wizard')
+      expect(loginUser).not_to be (nil)
     end
     it "returns nil of the user with an invalid email" do
-      user = User.authenticate_with_credentials('severus@wizard.com', 'wizard')
+      user = User.new(
+        first_name: "Minerva",
+        last_name: "McGonagall",
+        email: "minerva@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      user = User.authenticate_with_credentials('minerva123@wizard.com', 'wizard')
       expect(user).to be (nil)
     end
     it "returns nil of the user with an invalid password" do
-      user = User.authenticate_with_credentials('snape@wizard.com', 'muggle')
+      user = User.new(
+        first_name: "Minerva",
+        last_name: "McGonagall",
+        email: "minerva@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      user = User.authenticate_with_credentials('minerva@wizard.com', 'muggle')
       expect(user).to be (nil)
     end
+    it "returns an instance of the user with an email with whitespace" do
+      user = User.new(
+        first_name: "Minerva",
+        last_name: "McGonagall",
+        email: "minerva@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      user = User.authenticate_with_credentials('     minerva@wizard.com', 'wizard')
+      expect(user).to_not be (nil)
+    end
   end
+  
 end
