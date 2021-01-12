@@ -23,8 +23,11 @@ RSpec.feature "Visitor navigates to a product page", type: :feature, js: true do
     # ACT
     visit root_path
     save_screenshot('home_page_test3.png')
-    first('a.btn-primary').click
-    
+    expect(page).to have_content('My Cart (0)')
+    first('.btn-primary').click
 
+    expect(page).to have_content('My Cart (1)')
+
+    save_screenshot('cart_increase.png')
   end
 end
