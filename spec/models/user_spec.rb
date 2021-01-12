@@ -52,6 +52,25 @@ RSpec.describe User, type: :model do
   end
 
   describe ".authenticate_with_credentials" do
-    
+    user = User.new(
+      first_name: "Severus",
+      last_name: "Snape",
+      email: "snape@wizard.com",
+      password: 'wizard',
+      password_confirmation: 'wizard'
+    )
+    user.save
+    it "returns an instance of the user with valid credentials" do
+      user = User.authenticate_with_credentials('snape@wizard.com', 'wizard')
+      expect(user).not_to be (nil)
+    end
+    it "returns nil of the user with an invalid email" do
+      user = User.authenticate_with_credentials('severus@wizard.com', 'wizard')
+      expect(user).to be (nil)
+    end
+    it "returns nil of the user with an invalid password" do
+      user = User.authenticate_with_credentials('snape@wizard.com', 'muggle')
+      expect(user).to be (nil)
+    end
   end
 end

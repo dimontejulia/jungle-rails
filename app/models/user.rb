@@ -8,8 +8,14 @@ class User < ActiveRecord::Base
   validates :password, presence: true, confirmation: true, length: { minimum: 6, message:'password must be at least 6 characters' }
   validates :password_confirmation, presence: true
 
-  def authenticate_with_credentials
-
+  def self.authenticate_with_credentials(email, password)
+    email = email.downcase
+    @user = User.find_by_email(email)
+    if @user && @user.authenticate(password)
+      @user
+    else
+      nil
+    end
   end
 
   def downcase_email
