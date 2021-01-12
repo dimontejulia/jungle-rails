@@ -26,7 +26,7 @@ RSpec.describe User, type: :model do
       user.email = nil;
       expect(user).to_not (be_valid)
     end
-    it "should not accept emails already in db even if case is different" do
+    it "is not valid with emails already in db even if case is different" do
       user = User.new(
         first_name: "Albus",
         last_name: "Dumbledore",
@@ -43,7 +43,11 @@ RSpec.describe User, type: :model do
         password_confirmation: 'wizard'
       )
       expect(user2).to_not (be_valid)
-
+    end
+    it "is not valid with passwords less than 8 characters" do 
+      user.password = '123';
+      user.password_confirmation = '123';
+      expect(user).to_not (be_valid)
     end
   end
 end
