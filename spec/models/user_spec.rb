@@ -104,6 +104,18 @@ RSpec.describe User, type: :model do
       user = User.authenticate_with_credentials('     minerva@wizard.com', 'wizard')
       expect(user).to_not be (nil)
     end
+    it "returns an instance of the user with an email with different casing than when they signed up" do
+      user = User.new(
+        first_name: "Minerva",
+        last_name: "McGonagall",
+        email: "minerva@wizard.com",
+        password: 'wizard',
+        password_confirmation: 'wizard'
+      )
+      user.save
+      user = User.authenticate_with_credentials('     MINERVA@wizard.com', 'wizard')
+      expect(user).to_not be (nil)
+    end
   end
   
 end
