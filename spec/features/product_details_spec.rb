@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'faker'
 
-RSpec.feature "Visitor navigates to home page", type: :feature, js: true do
+RSpec.feature "Visitor navigates to a product page", type: :feature, js: true do
 
   # SETUP
   before :each do
@@ -22,12 +22,15 @@ RSpec.feature "Visitor navigates to home page", type: :feature, js: true do
 
     # ACT
     visit root_path
-
-    # DEBUG
-    save_screenshot('home_page.png')
+    save_screenshot('home_page_test2.png')
+    first('a.btn-default').click
+    save_screenshot('product_page.png')
 
     # VERIFY
-    #expect(page).to have_css 'article.product'
-    expect(page).to have_css 'article.product', count: 10
+    expect(page).to have_content('Name')
+    expect(page).to have_content('Description')
+    expect(page).to have_content('Quantity')
+    expect(page).to have_content('Price')
+
   end
 end
