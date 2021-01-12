@@ -24,13 +24,13 @@ RSpec.feature "Visitor navigates to a product page", type: :feature, js: true do
     visit root_path
     save_screenshot('home_page_test2.png')
     first('a.btn-default').click
-    save_screenshot('product_page.png')
+    
 
-    # VERIFY
     expect(page).to have_content('Name')
     expect(page).to have_content('Description')
     expect(page).to have_content('Quantity')
     expect(page).to have_content('Price')
 
+    save_screenshot('product_page.png')
   end
 end
